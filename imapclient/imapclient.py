@@ -387,9 +387,18 @@ class IMAPClient:
         self._checkok("starttls", typ, data)
 
         self._starttls_done = True
+        
 
-        #self._imap.sock = tls.wrap_socket(self._imap.sock, ssl_context, self.host)
-        #self._imap.file = self._imap.sock.makefile("rb")
+        self._imap.sock = tls.wrap_socket(self._imap.sock, ssl_context, self.host)
+        
+        # Python 3.14+ made 'file' a read-only property. 
+        # We must assign to the underlying '_file' attribute to avoid AttributeError.
+        if hasattr(self._imap, '_file'):
+            self._imap._file = self._imap.sock.makefile("rb")
+        else:
+            # Fallback for older Python versions where 'file' is a direct attribute
+            self._imap.file = self._imap.sock.makefile("rb")
+
         return data[0]
 
     def login(self, username: str, password: str):
