@@ -378,7 +378,7 @@ class IMAPClient:
         if self.ssl or self._starttls_done:
             raise exceptions.IMAPClientAbortError("TLS session already established")
 
-        typ, data = self._imap._simple_command("STARTTLS")
+        typ, data = self._imap.starttls(ssl_context=ssl_context)
         self._checkok("starttls", typ, data)
 
         self._starttls_done = True
