@@ -7,12 +7,22 @@ import socket
 from typing import Optional
 
 
-class IMAP4WithTimeout(imaplib.IMAP4):
-    def __init__(self, address: str, port: int, timeout: Optional[float]) -> None:
-        self._timeout = timeout
-        imaplib.IMAP4.__init__(self, address, port, timeout=timeout)
+# class IMAP4WithTimeout(imaplib.IMAP4):
+#     def __init__(self, address: str, port: int, timeout: Optional[float]) -> None:
+#         self._timeout = timeout
+#         imaplib.IMAP4.__init__(self, address, port, timeout=timeout)
 
-    def _create_socket(self, timeout: Optional[float] = None) -> socket.socket:
-        return socket.create_connection(
-            (self.host, self.port), timeout if timeout is not None else self._timeout
-        )
+#     def _create_socket(self, timeout: Optional[float] = None) -> socket.socket:
+#         return socket.create_connection(
+#             (self.host, self.port), timeout if timeout is not None else self._timeout
+#         )
+
+class IMAP4WithTimeout(imaplib.IMAP4):
+    def __init__(self, host: str = "", port: int = 143, timeout: float | None = None) -> None:
+        self._timeout = timeout
+        super().__init__(host=host, port=port, timeout=timeout)
+
+    def _create_socket(self, timeout: float | None = None) -> socket.socket:
+        timeout = timeout if timeout is not None else self._timeout
+        return super()._create_socket(timeout=timeout)
+
