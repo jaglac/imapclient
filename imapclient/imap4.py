@@ -43,6 +43,5 @@ class IMAP4WithTimeout(imaplib.IMAP4):
     def _create_socket(self, timeout: float | None = None) -> socket.socket:
         # Use the instance timeout if no specific timeout is provided
         effective_timeout = timeout if timeout is not None else self._timeout
-        return socket.create_connection(
-            (self.host, self.port), effective_timeout
-        )
+        # FIX: delegate to super() except for timeout override previously implemented in IMAPClient
+        return super()._create_socket(timeout=effective_timeout)
