@@ -316,20 +316,25 @@ class IMAPClient:
                 logger.info("Could not close the connection cleanly: %s", e)
 
     def _create_IMAP4(self):
-        if self.stream:
-            return imaplib.IMAP4_stream(self.host)
+        
+        if not self.stream and not self.ssl:
+            connect_timeout = getattr(self._timeout, 'connect', None)
+            return imap4.IMAP4WithTimeout(self.host, self.port, connect_timeout)
+    
+        # if self.stream:
+        #     return imaplib.IMAP4_stream(self.host)
 
-        connect_timeout = getattr(self._timeout, "connect", None)
+        # connect_timeout = getattr(self._timeout, "connect", None)
 
-        if self.ssl:
-            return tls.IMAP4_TLS(
-                self.host,
-                self.port,
-                self.ssl_context,
-                connect_timeout,
-            )
+        # if self.ssl:
+        #     return tls.IMAP4_TLS(
+        #         self.host,
+        #         self.port,
+        #         self.ssl_context,
+        #         connect_timeout,
+        #     )
 
-        return imap4.IMAP4WithTimeout(self.host, self.port, connect_timeout)
+        return imap4.IMAP4WithTimeout()
 
     def _set_read_timeout(self):
         if self._timeout is not None:
