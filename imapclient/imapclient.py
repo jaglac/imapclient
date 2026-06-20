@@ -383,8 +383,8 @@ class IMAPClient:
 
         self._starttls_done = True
 
-        self._imap.sock = tls.wrap_socket(self._imap.sock, ssl_context, self.host)
-        self._imap.file = self._imap.sock.makefile("rb")
+        #self._imap.sock = tls.wrap_socket(self._imap.sock, ssl_context, self.host)
+        #self._imap.file = self._imap.sock.makefile("rb")
         return data[0]
 
     def login(self, username: str, password: str):
