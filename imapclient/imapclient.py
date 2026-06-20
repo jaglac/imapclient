@@ -357,35 +357,6 @@ class IMAPClient:
         # In the py3 version it's just sock.
         return getattr(self._imap, "sslobj", self._imap.sock)
 
-    # @require_capability("STARTTLS")
-    # def starttls(self, ssl_context=None):  # patched for Python v3.14 compatibility
-    #     # due to breaking changes in imaplib handling of IMAP4.file attr
-    #     """Switch to an SSL encrypted connection by sending a STARTTLS command.
-
-    #     The *ssl_context* argument is optional and should be a
-    #     :py:class:`ssl.SSLContext` object. If no SSL context is given, a SSL
-    #     context with reasonable default settings will be used.
-
-    #     You can enable checking of the hostname in the certificate presented
-    #     by the server  against the hostname which was used for connecting, by
-    #     setting the *check_hostname* attribute of the SSL context to ``True``.
-    #     The default SSL context has this setting enabled.
-
-    #     Raises :py:exc:`Error` if the SSL connection could not be established.
-
-    #     Raises :py:exc:`AbortError` if the server does not support STARTTLS
-    #     or an SSL connection is already established.
-    #     """        
-    #     if self.ssl or self._starttls_done:
-    #         raise exceptions.IMAPClientAbortError("TLS session already established")
-
-    #     typ, data = self._imap.starttls(ssl_context=ssl_context)
-    #     self._checkok("starttls", typ, data)
-
-    #     self._starttls_done = True
-
-    #     return data[0]
-
     @require_capability('STARTTLS')
     def starttls(self, ssl_context=None):
         """
